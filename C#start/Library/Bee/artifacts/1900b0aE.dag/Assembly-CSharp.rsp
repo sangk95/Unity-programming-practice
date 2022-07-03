@@ -115,12 +115,12 @@
 -define:ENABLE_LEGACY_INPUT_MANAGER
 -define:CSHARP_7_OR_LATER
 -define:CSHARP_7_3_OR_NEWER
--r:"C:/UnityWorks/C#start/Library/PackageCache/com.unity.burst@1.6.4/Unity.Burst.CodeGen/Unity.Burst.Cecil.dll"
--r:"C:/UnityWorks/C#start/Library/PackageCache/com.unity.burst@1.6.4/Unity.Burst.CodeGen/Unity.Burst.Cecil.Mdb.dll"
--r:"C:/UnityWorks/C#start/Library/PackageCache/com.unity.burst@1.6.4/Unity.Burst.CodeGen/Unity.Burst.Cecil.Pdb.dll"
--r:"C:/UnityWorks/C#start/Library/PackageCache/com.unity.burst@1.6.4/Unity.Burst.CodeGen/Unity.Burst.Cecil.Rocks.dll"
--r:"C:/UnityWorks/C#start/Library/PackageCache/com.unity.burst@1.6.4/Unity.Burst.Unsafe.dll"
--r:"C:/UnityWorks/C#start/Library/PackageCache/com.unity.visualscripting@1.7.8/Runtime/VisualScripting.Flow/Dependencies/NCalc/Unity.VisualScripting.Antlr3.Runtime.dll"
+-r:"C:/UnityWorks/Unity-programming-practice/C#start/Library/PackageCache/com.unity.burst@1.6.4/Unity.Burst.CodeGen/Unity.Burst.Cecil.dll"
+-r:"C:/UnityWorks/Unity-programming-practice/C#start/Library/PackageCache/com.unity.burst@1.6.4/Unity.Burst.CodeGen/Unity.Burst.Cecil.Mdb.dll"
+-r:"C:/UnityWorks/Unity-programming-practice/C#start/Library/PackageCache/com.unity.burst@1.6.4/Unity.Burst.CodeGen/Unity.Burst.Cecil.Pdb.dll"
+-r:"C:/UnityWorks/Unity-programming-practice/C#start/Library/PackageCache/com.unity.burst@1.6.4/Unity.Burst.CodeGen/Unity.Burst.Cecil.Rocks.dll"
+-r:"C:/UnityWorks/Unity-programming-practice/C#start/Library/PackageCache/com.unity.burst@1.6.4/Unity.Burst.Unsafe.dll"
+-r:"C:/UnityWorks/Unity-programming-practice/C#start/Library/PackageCache/com.unity.visualscripting@1.7.8/Runtime/VisualScripting.Flow/Dependencies/NCalc/Unity.VisualScripting.Antlr3.Runtime.dll"
 -r:"D:/Unity/2021.2.16f1/Editor/Data/Managed/UnityEngine/UnityEditor.CoreModule.dll"
 -r:"D:/Unity/2021.2.16f1/Editor/Data/Managed/UnityEngine/UnityEditor.DeviceSimulatorModule.dll"
 -r:"D:/Unity/2021.2.16f1/Editor/Data/Managed/UnityEngine/UnityEditor.DiagnosticsModule.dll"
@@ -370,10 +370,12 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
 "Assets/_Scripts/Bullet.cs"
 "Assets/_Scripts/BulletLauncher.cs"
+"Assets/_Scripts/Factory.cs"
 "Assets/_Scripts/GameManager.cs"
 "Assets/_Scripts/IGameController.cs"
 "Assets/_Scripts/KeyController.cs"
 "Assets/_Scripts/MouseController.cs"
+"Assets/_Scripts/RecycleObject.cs"
 -langversion:9.0
 
 /deterministic
