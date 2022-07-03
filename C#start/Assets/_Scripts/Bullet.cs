@@ -7,20 +7,9 @@ public class Bullet : RecycleObject
 {
     [SerializeField]
     float speed = 5f;
-    Vector3 targetPosition;
-    bool isActivated = false;
-    public Action<Bullet> Destroyed;
     void Start()
     {
         
-    }
-    public void Activate(Vector3 startPosition, Vector3 targetPosition) 
-    {
-        transform.position = startPosition;
-        this.targetPosition = targetPosition;
-        Vector3 dir = (targetPosition - startPosition).normalized;
-        transform.rotation = Quaternion.LookRotation(transform.forward, dir);
-        isActivated = true;
     }
 
     bool IsArrivedToTarget()

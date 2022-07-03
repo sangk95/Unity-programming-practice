@@ -6,32 +6,46 @@ public class BulletLauncher : MonoBehaviour
 {
     [SerializeField]
     Bullet bulletPrefab;
-    Bullet bullet;
+    [SerializeField]
+    Explosion explosionPrefab;
     [SerializeField]
     Transform firePosition;
-    Factory bulletFactory;
     [SerializeField]
     float fireDelay = 0.5f;
     float elapsedFireTime;
     bool canShoot = true; 
+    Factory bulletFactory;
+    Factory explosionFactory;
+
     void Start()
     {
         bulletFactory = new Factory(bulletPrefab);
+        explosionFactory = new Factory(explosionPrefab);
     }
     public void OnFireButtonPressed(Vector3 position)
     {
         if(!canShoot)
             return;
 
-        bullet = bulletFactory.Get() as Bullet;
+        RecycleObject bullet = bulletFactory.Get();
         bullet.Activate(firePosition.position, position);
         bullet.Destroyed += OnBulletDestroyed;
         canShoot = false;
     }
-    void OnBulletDestroyed(Bullet usedBullet) 
+    void OnBulletDestroyed(RecycleObject usedBullet) 
     {
+        Vector3 lastBulletPosition = usedBullet.transform.position;
         usedBullet.Destroyed -= OnBulletDestroyed;
         bulletFactory.Restore(usedBullet);
+
+        RecycleObject explosion = explosionFactory.Get();
+        explosion.Activate(lastBulletPosition);
+        explosion.Destroyed += OnExplosionDestroyed;
+    }
+    void OnExplosionDestroyed(RecycleObject usedExplosion)
+    {
+        usedExplosion.Destroyed -= OnExplosionDestroyed;
+        explosionFactory.Restore(usedExplosion);
     }
     void Update()
     {
