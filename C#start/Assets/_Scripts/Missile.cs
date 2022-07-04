@@ -9,6 +9,7 @@ public class Missile : RecycleObject
     Rigidbody2D body;
     [SerializeField]
     float moveSpeed = 3f; 
+    float bottomY;
     void Awake()
     {
         box = GetComponent<BoxCollider2D>();
@@ -16,6 +17,11 @@ public class Missile : RecycleObject
         body.bodyType = RigidbodyType2D.Kinematic;
         box.isTrigger = true; 
     } 
+    void Start()
+    {
+        Vector3 bottomPosition = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
+        bottomY = bottomPosition.y - box.size.y;
+    }
     void OnTriggerEnter2D(Collider2D collision) 
     {
         if(collision.GetComponent<Building>() != null)
@@ -36,10 +42,20 @@ public class Missile : RecycleObject
         Destroyed?.Invoke(this);
     }
 
+    void CheckOutOfScreen()
+    {
+        if(transform.position.y < bottomY)
+        {
+            isActivated = false;
+            OutOfScreen?.Invoke(this);
+        }
+    }
+
     void Update()
     {
         if(!isActivated)
             return;
         transform.position += transform.up * moveSpeed * Time.deltaTime;
+        CheckOutOfScreen();
     }
 }

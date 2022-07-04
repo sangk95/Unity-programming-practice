@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,9 +23,20 @@ public class GameManager : MonoBehaviour
     int maxMissileCount = 20;
     [SerializeField]
     float missileSpawnInterval = 0.5f;
+    [SerializeField]
+    int scorePerMissile = 50;
+    [SerializeField]
+    int scorePerBuilding = 5000;
+    [SerializeField]
+    UIRoot uIRoot;
+    public Action<bool, int> GameEnded;
+
+    bool isAllBuildingDestroyed = false;
+
     MissileManager missileManager;
     TimeManager timeManager;
     MouseController mouseController;
+    ScoreManager scoreManager;
     void Start()
     {
         launcher = Instantiate(launcherPrefab);
@@ -34,6 +46,7 @@ public class GameManager : MonoBehaviour
         timeManager = gameObject.AddComponent<TimeManager>();
         missileManager = gameObject.AddComponent<MissileManager>();
         missileManager.Initialize(new Factory(missilePrefab), buildingManager, maxMissileCount, missileSpawnInterval);
+        scoreManager = new ScoreManager(scorePerMissile, scorePerBuilding);
 
         BindEvents();
 
@@ -46,6 +59,16 @@ public class GameManager : MonoBehaviour
         timeManager.GameStarted += buildingManager.OnGameStarted;
         timeManager.GameStarted += launcher.OnGameStarted;
         timeManager.GameStarted += missileManager.OnGameStarted;
+        timeManager.GameStarted += uIRoot.OnGameStarted;
+        missileManager.MissileDestroyed += scoreManager.OnMissileDestroyed;
+        missileManager.AllMissilesDestroyed += this.OnAllMissileDestroyed;
+        scoreManager.ScoreChanged += uIRoot.OnScoreChanged;
+        buildingManager.AllBuildingsDestroyed += this.OnAllBuildingDestroyed;
+
+        this.GameEnded += launcher.OnGameEnded;
+        this.GameEnded += missileManager.OnGameEnded;
+        this.GameEnded += scoreManager.OnGameEnded;
+        this.GameEnded += uIRoot.OnGameEnded;
     }
     void UnBindEvents()
     {
@@ -53,11 +76,37 @@ public class GameManager : MonoBehaviour
         timeManager.GameStarted -= buildingManager.OnGameStarted;
         timeManager.GameStarted -= launcher.OnGameStarted;
         timeManager.GameStarted -= missileManager.OnGameStarted;
+        timeManager.GameStarted -= uIRoot.OnGameStarted;
+        missileManager.MissileDestroyed -= scoreManager.OnMissileDestroyed;
+        missileManager.AllMissilesDestroyed -= this.OnAllMissileDestroyed;
+        scoreManager.ScoreChanged -= uIRoot.OnScoreChanged;
+        buildingManager.AllBuildingsDestroyed -= this.OnAllBuildingDestroyed;
+
+        this.GameEnded -= launcher.OnGameEnded;
+        this.GameEnded -= missileManager.OnGameEnded;
+        this.GameEnded -= scoreManager.OnGameEnded;
+        this.GameEnded -= uIRoot.OnGameEnded;
     }
 
     void OnDestroy()
     {
         UnBindEvents();   
+    }
+
+    void OnAllBuildingDestroyed()
+    {
+        isAllBuildingDestroyed = true;
+        GameEnded?.Invoke(false, buildingManager.BuildingCount);
+    }
+    void OnAllMissileDestroyed()
+    {
+        StartCoroutine(DelayedGameEnded()); 
+    }
+    IEnumerator DelayedGameEnded()
+    {
+        yield return null;
+        if(!isAllBuildingDestroyed)
+            GameEnded?.Invoke(true, buildingManager.BuildingCount);
     }
 
     // Update is called once per frame

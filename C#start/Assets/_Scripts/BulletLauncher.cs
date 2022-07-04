@@ -39,6 +39,11 @@ public class BulletLauncher : MonoBehaviour
     {
         isGameStarted = true;
     }
+
+    public void OnGameEnded(bool isVictory, int buildingCount) 
+    {
+        isGameStarted = false;
+    }
     void OnBulletDestroyed(RecycleObject usedBullet) 
     {
         Vector3 lastBulletPosition = usedBullet.transform.position;

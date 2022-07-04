@@ -8,6 +8,7 @@ public class RecycleObject : MonoBehaviour
     protected bool isActivated = false;
     protected Vector3 targetPosition;
     public Action<RecycleObject> Destroyed;
+    public Action<RecycleObject> OutOfScreen;
     public virtual void Activate(Vector3 position)
     {
         isActivated = true;

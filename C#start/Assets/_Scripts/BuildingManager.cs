@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 public class BuildingManager
 {
     Building prefab;
@@ -9,10 +9,10 @@ public class BuildingManager
     Factory effectFactory;
     List<Building> buildings = new List<Building>();
 
-    public bool HasBuilding 
-    { 
-        get {return buildings.Count > 0;}
-    }
+    public bool HasBuilding { get {return buildings.Count > 0;} }
+    public int BuildingCount { get { return buildings.Count; } }
+    public Action AllBuildingsDestroyed;
+
     public BuildingManager(Building prefab, Transform[] buildingLocators, Factory effectFactory) 
     {
         this.prefab = prefab;
@@ -30,7 +30,7 @@ public class BuildingManager
     public Vector3 GetRandomBuildingPosition()
     {
         Debug.Assert(buildings.Count > 0, "no element in buildings!"); 
-        Building building = buildings[Random.Range(0, buildings.Count)];
+        Building building = buildings[UnityEngine.Random.Range(0, buildings.Count)];
         return building.transform.position; 
     }
 
@@ -61,6 +61,9 @@ public class BuildingManager
         RecycleObject effect = effectFactory.Get();
         effect.Activate(lastPosition); 
         effect.Destroyed += OnEffectDestroyed;
+
+        if(buildings.Count == 0)
+            AllBuildingsDestroyed?.Invoke();
     }
 
     void OnEffectDestroyed(RecycleObject effect) 

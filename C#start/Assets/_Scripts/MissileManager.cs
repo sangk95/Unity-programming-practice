@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 public class MissileManager : MonoBehaviour
 {
     Factory missileFactory;
@@ -11,6 +11,9 @@ public class MissileManager : MonoBehaviour
     int currentMissileCount;
     float missileSpawnInterval = 0.5f;
     Coroutine spawningMissile; 
+    List<RecycleObject> missiles = new List<RecycleObject>();
+    public Action MissileDestroyed;
+    public Action AllMissilesDestroyed;
     public void Initialize(Factory missileFactory, BuildingManager buildingManager, int maxMissileCount, float missileSpawnInterval)
     {
         if(isInitialized)
@@ -29,6 +32,16 @@ public class MissileManager : MonoBehaviour
     {
         currentMissileCount = 0;
         spawningMissile = StartCoroutine(AutoSpawnMissile());
+    }
+
+    public void OnGameEnded(bool isVictory, int buildingCount) 
+    {
+        if(missiles.Count == 0) 
+            return;
+        foreach(var missile in missiles)
+        {
+            missileFactory.Restore(missile);
+        }
     }
     IEnumerator AutoSpawnMissile()
     {
@@ -54,19 +67,42 @@ public class MissileManager : MonoBehaviour
         missile.Activate(GetMissileSpawnPosition(), buildingManager.GetRandomBuildingPosition()); 
 
         missile.Destroyed += this.OnMissileDestroyed;
-
+        missile.OutOfScreen += this.OnMissileOutOfScreen;
+        missiles.Add(missile);
         currentMissileCount++;
     }
     void OnMissileDestroyed(RecycleObject missile) 
     {
+        RestoreMissile(missile);
+        MissileDestroyed?.Invoke();
+    }
+
+    void OnMissileOutOfScreen(RecycleObject missile)
+    {
+        RestoreMissile(missile);
+    }
+    void RestoreMissile(RecycleObject missile)
+    {
         missile.Destroyed -= this.OnMissileDestroyed;
+        missile.Destroyed -= this.OnMissileOutOfScreen;
+        int index = missiles.IndexOf(missile);
+        missiles.RemoveAt(index); 
         missileFactory.Restore(missile);
+        CheckAllMissileRestored();
+    }
+
+    void CheckAllMissileRestored() 
+    {
+        if (currentMissileCount == maxMissileCount && missiles.Count == 0)
+        {
+            AllMissilesDestroyed?.Invoke();
+        }
     }
 
     Vector3 GetMissileSpawnPosition() 
     {
         Vector3 spawnPosition = Vector3.zero;
-        spawnPosition.x = Random.Range(0f, 1f);
+        spawnPosition.x = UnityEngine.Random.Range(0f, 1f);
         spawnPosition.y = 1f; 
 
         spawnPosition = Camera.main.ViewportToWorldPoint(spawnPosition);
