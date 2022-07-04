@@ -402,6 +402,8 @@
 "Assets/TextMesh Pro/Examples & Extras/Scripts/VertexShakeB.cs"
 "Assets/TextMesh Pro/Examples & Extras/Scripts/VertexZoom.cs"
 "Assets/TextMesh Pro/Examples & Extras/Scripts/WarpTextExample.cs"
+"Assets/_Scripts/AudioManager.cs"
+"Assets/_Scripts/AudioStorage.cs"
 "Assets/_Scripts/Building.cs"
 "Assets/_Scripts/BuildingManager.cs"
 "Assets/_Scripts/Bullet.cs"

@@ -97,6 +97,7 @@ public class GameManager : MonoBehaviour
     {
         isAllBuildingDestroyed = true;
         GameEnded?.Invoke(false, buildingManager.BuildingCount);
+        AudioManager.instance.PlaySound(SoundId.GameEnd); 
     }
     void OnAllMissileDestroyed()
     {
@@ -106,12 +107,10 @@ public class GameManager : MonoBehaviour
     {
         yield return null;
         if(!isAllBuildingDestroyed)
+        {
             GameEnded?.Invoke(true, buildingManager.BuildingCount);
+            AudioManager.instance.PlaySound(SoundId.GameEnd); 
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

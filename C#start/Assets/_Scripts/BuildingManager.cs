@@ -51,6 +51,8 @@ public class BuildingManager
     }
     void OnBuildingDestroyed(Building building) 
     {
+        AudioManager.instance.PlaySound(SoundId.BuildingExplosion);
+        
         Vector3 lastPosition = building.transform.position;
         lastPosition.y += (building.GetComponent<BoxCollider2D>().size.y * 0.5f);
         building.Destroyed -= this.OnBuildingDestroyed;
