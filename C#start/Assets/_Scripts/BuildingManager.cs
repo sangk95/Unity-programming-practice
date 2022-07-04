@@ -1,0 +1,72 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class BuildingManager
+{
+    Building prefab;
+    Transform[] buildingLocators;
+    Factory effectFactory;
+    List<Building> buildings = new List<Building>();
+
+    public bool HasBuilding 
+    { 
+        get {return buildings.Count > 0;}
+    }
+    public BuildingManager(Building prefab, Transform[] buildingLocators, Factory effectFactory) 
+    {
+        this.prefab = prefab;
+        this.buildingLocators = buildingLocators;
+        this.effectFactory = effectFactory;
+
+        Debug.Assert(this.prefab != null, "null building prefab!");
+        Debug.Assert(this.buildingLocators != null, "null buildingLocators!"); 
+        Debug.Assert(this.effectFactory != null, "null effectFactory!"); 
+    }
+    public void OnGameStarted() 
+    {
+        CreateBuildings();
+    }
+    public Vector3 GetRandomBuildingPosition()
+    {
+        Debug.Assert(buildings.Count > 0, "no element in buildings!"); 
+        Building building = buildings[Random.Range(0, buildings.Count)];
+        return building.transform.position; 
+    }
+
+    void CreateBuildings()
+    {
+        if(buildings.Count > 0)
+        {
+            Debug.LogWarning("Buildings have been already created!");
+            return;
+        } 
+        for(int i=0 ; i<buildingLocators.Length ; i++) 
+        {
+            Building building = GameObject.Instantiate(prefab);
+            building.transform.position = buildingLocators[i].position; 
+            building.Destroyed += this.OnBuildingDestroyed;
+            buildings.Add(building);
+        }
+    }
+    void OnBuildingDestroyed(Building building) 
+    {
+        Vector3 lastPosition = building.transform.position;
+        lastPosition.y += (building.GetComponent<BoxCollider2D>().size.y * 0.5f);
+        building.Destroyed -= this.OnBuildingDestroyed;
+        int index = buildings.IndexOf(building);
+        buildings.RemoveAt(index);
+        GameObject.Destroy(building.gameObject);
+
+        RecycleObject effect = effectFactory.Get();
+        effect.Activate(lastPosition); 
+        effect.Destroyed += OnEffectDestroyed;
+    }
+
+    void OnEffectDestroyed(RecycleObject effect) 
+    {
+        effect.Destroyed -= this.OnEffectDestroyed;
+        effectFactory.Restore(effect);
+    }
+
+}

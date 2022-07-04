@@ -14,6 +14,7 @@ public class BulletLauncher : MonoBehaviour
     float fireDelay = 0.5f;
     float elapsedFireTime;
     bool canShoot = true; 
+    bool isGameStarted = false;
     Factory bulletFactory;
     Factory explosionFactory;
 
@@ -24,6 +25,8 @@ public class BulletLauncher : MonoBehaviour
     }
     public void OnFireButtonPressed(Vector3 position)
     {
+        if(!isGameStarted)
+            return;
         if(!canShoot)
             return;
 
@@ -31,6 +34,10 @@ public class BulletLauncher : MonoBehaviour
         bullet.Activate(firePosition.position, position);
         bullet.Destroyed += OnBulletDestroyed;
         canShoot = false;
+    }
+    public void OnGameStarted()
+    {
+        isGameStarted = true;
     }
     void OnBulletDestroyed(RecycleObject usedBullet) 
     {
@@ -49,6 +56,8 @@ public class BulletLauncher : MonoBehaviour
     }
     void Update()
     {
+        if(!isGameStarted)
+            return;
         if(!canShoot)
         {
             elapsedFireTime += Time.deltaTime;

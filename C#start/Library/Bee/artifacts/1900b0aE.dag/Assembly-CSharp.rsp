@@ -368,15 +368,22 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/Unity.VSCode.Editor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
+"Assets/_Scripts/Building.cs"
+"Assets/_Scripts/BuildingManager.cs"
 "Assets/_Scripts/Bullet.cs"
 "Assets/_Scripts/BulletLauncher.cs"
+"Assets/_Scripts/DestroyEffect.cs"
 "Assets/_Scripts/Explosion.cs"
 "Assets/_Scripts/Factory.cs"
 "Assets/_Scripts/GameManager.cs"
 "Assets/_Scripts/IGameController.cs"
 "Assets/_Scripts/KeyController.cs"
+"Assets/_Scripts/Missile.cs"
+"Assets/_Scripts/MissileManager.cs"
 "Assets/_Scripts/MouseController.cs"
 "Assets/_Scripts/RecycleObject.cs"
+"Assets/_Scripts/ScoreManager.cs"
+"Assets/_Scripts/TimeManager.cs"
 -langversion:9.0
 
 /deterministic
